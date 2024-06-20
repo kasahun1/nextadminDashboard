@@ -31,10 +31,16 @@
   .input {
     background-color: transparent;
     border: none;
+    outline: none;
     color: var(--text);
   }
   
   .icons{
+    display: flex;
+    gap: 20px;
+  }
+  .icon{
+    cursor: pointer;
     display: flex;
     gap: 20px;
   }
