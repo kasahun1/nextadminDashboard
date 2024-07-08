@@ -3,8 +3,13 @@ import Link from "next/link";
 import Search from "@/app/ui/dashboard/search/search";
 import Image from "next/image";
 import Pagination from "@/app/ui/dashboard/pagination/pagination";
+import { fetchUsers } from "@/app/lib/data";
 
-const UsersPage = () => {
+const UsersPage = async ({ searchParams }) => {
+  const q = searchParams?.q || "";
+  const users = await fetchUsers(q)
+  // const page = searchParams?.page || 1; 
+
   return (
     <div className={styles.container}>
       <div className={styles.top}>
@@ -25,34 +30,33 @@ const UsersPage = () => {
           </tr>
         </thead>
         <tbody>
-          {/* {users.map((user) => ( */}
-            <tr>
+          {users.map((user) => (
+            <tr key={user.id}>
               <td>
                 <div className={styles.user}>
                   <Image
-                    src= "/noavatar.png"
+                    src={user.img || "/noavatar.png"}
                     alt=""
                     width={40}
                     height={40}
                     className={styles.userImage}
                   />
-                  {/* {user.username} */}
-                  kasahun abebe
+                  {user.username}
                 </div>
               </td>
-              <td>kasu@gmail.com</td>
-              <td>10/22/2024</td>
-              <td>Admin</td>
-              <td>active</td>
+              <td>{user.email}</td>
+              <td>{user.createdAt?.toString().slice(4, 16)}</td>
+              <td>{user.isAdmin ? "Admin" : "Client"}</td>
+              <td>{user.isActive ? "active" : "passive"}</td>
               <td>
                 <div className={styles.buttons}>
-                  <Link href={`/dashboard/users/test`}>
+                  <Link href={`/dashboard/users/${user.id}`}>
                     <button className={`${styles.button} ${styles.view}`}>
                       View
                     </button>
                   </Link>
                   <form>
-                    <input type="hidden" name="id" value="kasu" />
+                    <input type="hidden" name="id" value={(user.id)} />
                     <button className={`${styles.button} ${styles.delete}`}>
                       Delete
                     </button>
@@ -60,7 +64,7 @@ const UsersPage = () => {
                 </div>
               </td>
             </tr>
-           {/* ))} */}
+           ))}
         </tbody>
       </table>
       <Pagination />
