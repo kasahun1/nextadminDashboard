@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@next/eslint-plugin-next": "14.0.1",
+    "bcryptjs": "^2.4.3",
     "mongodb": "^6.8.0",
     "mongoose": "^8.4.5",
     "next": "14.0.1",
