@@ -4,7 +4,8 @@ import { redirect } from "next/navigation";
 import { Product, User } from "./models";
 import { connectToDB } from "./utils";
 import { revalidatePath } from "next/cache";
-import bcrypt from "bcryptjs";
+import bcrypt from "bcrypt";
+import { signIn } from "@/auth";
 
 
 export const addUser = async (formData) => {
@@ -153,4 +154,22 @@ export const addUser = async (formData) => {
 
   revalidatePath("/dashboard/products");
   redirect("/dashboard/products");
+};
+
+export const authenticate = async(prevState, formData) => {
+  if (!formData) {
+    console.error("formData is not iterable", formData);
+    return;
+  }
+
+  const { username, password } = Object.fromEntries(formData);
+   console.log(username)
+  try {
+    await signIn("credentials", { username, password });
+  } catch (err) {
+    if (err.message.includes("CredentialsSignin")) {
+      return "Wrong Credentials";
+    }
+    throw err;
+  }
 };
